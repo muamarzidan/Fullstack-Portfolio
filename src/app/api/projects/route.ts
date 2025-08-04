@@ -8,7 +8,6 @@ export async function GET() {
         const projects = await prisma.project.findMany({
             orderBy: { createdAt: 'desc' }
         })
-        console.log('Fetched projects:', projects)
 
         return NextResponse.json(projects)
     } catch (error) {

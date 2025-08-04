@@ -26,7 +26,6 @@ export default function ProjectsPage() {
         try {
             setLoading(true);
             const response = await fetch("/api/projects");
-            console.log("Response status:", response);
             if (!response.ok) {
                 throw new Error("Failed to fetch projects");
             }

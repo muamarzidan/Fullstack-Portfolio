@@ -15,8 +15,6 @@ async function main() {
         },
     })
 
-    console.log('Created user:', user)
-
     // Sample projects
     const projects = await prisma.project.createMany({
         data: [
@@ -37,8 +35,6 @@ async function main() {
             }
         ]
     })
-
-    console.log('Created projects:', projects)
 }
 
 main()
