@@ -12,7 +12,6 @@ export default function DarkModeToggle() {
         setMounted(true);
     }, []);
 
-    // Prevent hydration mismatch
     if (!mounted) {
         return (
             <button

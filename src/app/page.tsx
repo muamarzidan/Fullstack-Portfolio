@@ -153,7 +153,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors px-4 xl:px-0">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
       <Navbar />
 
       {/* Hero Section */}
