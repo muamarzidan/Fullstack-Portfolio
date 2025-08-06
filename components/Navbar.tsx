@@ -15,12 +15,10 @@ export default function Navbar() {
         { href: "#contact", label: "Contact" },
     ];
 
-    // Close mobile menu when pathname changes
     useEffect(() => {
         setIsOpen(false);
     }, [pathname]);
 
-    // Close mobile menu when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
@@ -52,15 +50,44 @@ export default function Navbar() {
         setIsOpen(false);
     };
 
+    const [activeSection, setActiveSection] = useState<string>('');
+    useEffect(() => {
+        const sectionIds = navItems.map(item => item.href);
+        
+        const handleScroll = () => {
+            const scrollPosition = window.scrollY + 100;
+
+            for (let i = sectionIds.length - 1; i >= 0; i--) {
+                const section = document.querySelector(sectionIds[i]);
+                if (section) {
+                    const offsetTop = section.getBoundingClientRect().top + window.scrollY;
+
+                    if (scrollPosition >= offsetTop) {
+                        setActiveSection(sectionIds[i]);
+                        break;
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+
     return (
         <>
             <nav className="bg-transparent sticky top-0 z-40">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-4 xl:px-0">
                     <div className="flex justify-between h-16">
                         {/* Logo/Home */}
                         <div className="flex items-center">
-                            <Link href="/" className="text-2xl font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
-                                Portfolio
+                            <Link href="/" className="text-2xl font-bold text-blue-950 dark:text-blue-200 hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
+                                MuzirO
                             </Link>
                         </div>
 
@@ -70,7 +97,12 @@ export default function Navbar() {
                                 <button
                                     key={item.href}
                                     onClick={() => scrollToSection(item.href)}
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer whitespace-nowrap"
+                                    className={`
+                                        relative px-4 py-2 text-sm transition-colors cursor-pointer
+                                        ${activeSection === item.href 
+                                            ? 'text-blue-950 font-bold after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-blue-950 after:transition-all after:duration-300' 
+                                            : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'}
+                                    `}
                                 >
                                     {item.label}
                                 </button>

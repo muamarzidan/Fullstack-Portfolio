@@ -1,7 +1,10 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Custom scrollbar */
+:root {
+  --fallback-fonts: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -19,6 +22,14 @@
   background: #a8a8a8;
 }
 
+body {
+  font-family: var(--font-poppins), var(--fallback-fonts);
+}
+
 html {
   scroll-behavior: smooth;
+}
+
+.teast {
+  clip-path: polygon(0% 20%, 10% 20%, 10% 0%, 90% 0%, 90% 20%, 100% 20%, 100% 100%, 0% 100%);
 }

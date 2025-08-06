@@ -10,6 +10,9 @@ export default {
     darkMode: 'class',
     theme: {
         extend: {
+            fontFamily: {
+                sans: ['var(--font-poppins)', 'system-ui'],
+            },
             colors: {
                 primary: '#3b82f6',
                 secondary: '#64748b',
