@@ -38,7 +38,7 @@ export default function DarkModeToggle() {
     return (
         <button
             onClick={toggleTheme}
-            className="p-2 rounded-md cursor-pointer text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="p-2 rounded-md cursor-pointer text-gray-700 dark:text-gray-300 hover:text-blue-900 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors"
             aria-label="Toggle dark mode"
         >
             {theme === "light" ? (

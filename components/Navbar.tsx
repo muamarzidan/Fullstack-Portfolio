@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-
 import DarkModeToggle from "./DarkModeToggle";
 
 export default function Navbar() {
@@ -11,12 +10,21 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [activeSection, setActiveSection] = useState<string>('');
 
-
     const navItems = [
         { href: "#skills", label: "Skills" },
         { href: "#projects", label: "Projects" },
         { href: "#contact", label: "Contact" },
     ];
+
+    const scrollToSection = (href: string) => {
+        if (href.startsWith('#')) {
+            const element = document.querySelector(href);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        setIsOpen(false);
+    };
 
     useEffect(() => {
         setIsOpen(false);
@@ -42,16 +50,6 @@ export default function Navbar() {
             document.body.style.overflow = 'unset';
         };
     }, [isOpen]);
-
-    const scrollToSection = (href: string) => {
-        if (href.startsWith('#')) {
-            const element = document.querySelector(href);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-        setIsOpen(false);
-    };
 
     useEffect(() => {
         const sectionIds = navItems.map(item => item.href);
@@ -82,7 +80,7 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="sticky top-0 z-40 backdrop-blur-3xl bg-white/30 dark:bg-blue-950/30">
+            <nav className="sticky top-0 z-40 backdrop-blur-3xl bg-white/50 dark:bg-transparent">
                 <div className="max-w-7xl mx-auto px-4 xl:px-0">
                     <div className="flex justify-between h-16">
                         {/* Logo/Home */}
@@ -99,9 +97,9 @@ export default function Navbar() {
                                     key={item.href}
                                     onClick={() => scrollToSection(item.href)}
                                     className={`
-                                        relative px-4 py-2 text-sm transition-colors cursor-pointer
+                                        relative px-4 py-2 text-base transition-colors cursor-pointer
                                         ${activeSection === item.href 
-                                            ? 'text-blue-950 dark:text-blue-300 font-bold after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-blue-950 dark:after:bg-blue-300 after:transition-all after:duration-300' 
+                                            ? 'text-blue-950 dark:text-blue-300 font-bold after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:rounded-2xl after:bg-blue-950 dark:after:bg-blue-300 after:transition-all after:duration-300' 
                                             : 'text-gray-900 dark:text-gray-200 hover:text-blue-900 dark:hover:text-blue-300'}
                                     `}
                                 >
@@ -135,37 +133,53 @@ export default function Navbar() {
             </nav>
 
             {/* Mobile menu overlay */}
-            {isOpen && (
-                <div className="fixed inset-0 z-50 md:hidden">
-                    {/* Background overlay */}
-                    <div className="fixed inset-0 bg-black opacity-50 dark:bg-opacity-70"></div>
-                    
-                    {/* Sidebar */}
-                    <div className="mobile-menu fixed top-0 right-0 h-full w-64 bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 ease-in-out">
-                        <div className="flex items-center justify-end h-16 px-4 border-b dark:border-gray-700">
+            <div className={`fixed inset-0 z-50 md:hidden transition-all duration-300 ease-in-out ${
+                isOpen ? 'visible opacity-100' : 'invisible opacity-0'
+            }`}>
+                {/* Background overlay */}
+                <div 
+                    className={`absolute inset-0 bg-black transition-opacity duration-300 ${
+                        isOpen ? 'opacity-50' : 'opacity-0'
+                    } dark:bg-opacity-70`}
+                    onClick={() => setIsOpen(false)}
+                ></div>
+                
+                {/* Sidebar */}
+                <div className={`mobile-menu absolute top-0 right-0 h-full w-64 bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 ease-in-out ${
+                    isOpen ? 'translate-x-0' : 'translate-x-full'
+                }`}>
+                    <div className="flex items-center justify-end h-16 px-4 border-b border-gray-300 dark:border-gray-700">
+                        <button
+                            onClick={() => setIsOpen(false)}
+                            className="cursor-pointer p-2 rounded-md text-gray-800 dark:text-gray-300 hover:text-blue-900 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="py-6">
+                        {navItems.map((item, index) => (
                             <button
-                                onClick={() => setIsOpen(false)}
-                                className="cursor-pointer p-2 rounded-md text-gray-800 dark:text-gray-300 hover:text-blue-900 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors"
+                                key={item.href}
+                                onClick={() => scrollToSection(item.href)}
+                                className={`
+                                    relative block w-full text-left px-6 py-3 text-base transition-all duration-200 transform cursor-pointer
+                                    ${isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'}
+                                    ${activeSection === item.href 
+                                        ? 'text-blue-950 dark:text-blue-300 font-semibold bg-blue-50 dark:bg-gray-800 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-blue-950 dark:before:bg-blue-300 before:transition-all before:duration-300' 
+                                        : 'text-gray-800 dark:text-gray-300 font-medium hover:text-blue-900 dark:hover:text-blue-300 hover:bg-gray-50 dark:hover:bg-gray-800'}
+                                `}
+                                style={{
+                                    transitionDelay: isOpen ? `${index * 50}ms` : '0ms'
+                                }}
                             >
-                                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
+                                {item.label}
                             </button>
-                        </div>
-                        <div className="py-6">
-                            {navItems.map((item) => (
-                                <button
-                                    key={item.href}
-                                    onClick={() => scrollToSection(item.href)}
-                                    className="block w-full text-left px-6 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                                >
-                                    {item.label}
-                                </button>
-                            ))}
-                        </div>
+                        ))}
                     </div>
                 </div>
-            )}
+            </div>
         </>
     );
 };
