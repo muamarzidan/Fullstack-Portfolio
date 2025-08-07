@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '../../../../../lib/prisma'
-import { getSession } from '../../../../../lib/auth'
+import { NextRequest, NextResponse } from 'next/server';
 
-// PUT - Update project
+import { prisma } from '../../../../../lib/prisma';
+import { getSession } from '../../../../../lib/auth';
+
+
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        // Check authentication
         const session = await getSession(request)
         if (!session) {
             return NextResponse.json(
@@ -18,7 +18,7 @@ export async function PUT(
         }
 
         const { title, description, image } = await request.json()
-        const { id } = params
+        const { id } = await params
 
         const project = await prisma.project.update({
             where: { id },
@@ -37,15 +37,13 @@ export async function PUT(
             { status: 500 }
         )
     }
-}
+};
 
-// DELETE - Delete project
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        // Check authentication
         const session = await getSession(request)
         if (!session) {
             return NextResponse.json(
@@ -54,7 +52,7 @@ export async function DELETE(
             )
         }
 
-        const { id } = params
+        const { id } = await params
 
         await prisma.project.delete({
             where: { id }
@@ -71,4 +69,4 @@ export async function DELETE(
             { status: 500 }
         )
     }
-}
+};

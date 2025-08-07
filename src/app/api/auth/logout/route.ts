@@ -6,11 +6,14 @@ export async function POST() {
         { status: 200 }
     )
 
+    // Set cookie with proper deletion parameters
     response.cookies.set('session', '', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: 'strict',
         maxAge: 0,
+        path: '/',
+        expires: new Date(0), // Ensure cookie is expired
     })
 
     return response

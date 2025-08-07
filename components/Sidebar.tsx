@@ -1,7 +1,7 @@
 'use client'
-
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+
 
 export default function Sidebar() {
     const pathname = usePathname()
@@ -20,9 +20,13 @@ export default function Sidebar() {
     ]
 
     const handleLogout = async () => {
-        await fetch('/api/auth/logout', { method: 'POST' })
-        window.location.href = '/'
-    }
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            window.location.href = '/';
+        } catch (error) {
+            return;
+        }
+    };
 
     return (
         <div className="w-64 bg-gray-800 text-white min-h-screen">
@@ -57,4 +61,4 @@ export default function Sidebar() {
             </div>
         </div>
     )
-}
+};

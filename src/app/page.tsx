@@ -13,6 +13,7 @@ import Light from "../../components/Light";
 import ChromaGrid from "../../components/Project";
 import ProfileCard from "../../components/ProfileCrad";
 
+
 export default function HomePage() {
   const skills = [
     { name: "Next.js", level: 90, icon: "⚛️" },
@@ -169,12 +170,12 @@ export default function HomePage() {
                   </em>
                 </h3>
                 <h2 className="text-5xl font-bold">
-                  Know me <span className="text-red-700">&</span> <br /> Connect
+                  Know me <span className="text-red-700">&amp;</span> <br /> Connect
                   with me
                 </h2>
               </div>
               <p className="text-lg text-gray-700">
-                I am with skills in web development, specializing in front-end technologies such as React, Next, JS/TS, Tailwind, Bootstrap & Another framework/library. 
+                I am with skills in web development, specializing in front-end technologies such as React, Next, JS/TS, Tailwind, Bootstrap &amp; Another framework/library. 
                 I am also actively exploring in UX/UI Design.
               </p>
             </div>
@@ -318,7 +319,7 @@ export default function HomePage() {
               Get In Touch
             </h2>
             <p className="mt-4 max-w-3xl text-xl text-gray-500 dark:text-gray-300 lg:mx-auto">
-              Have a project in mind? Let's work together to bring your ideas to
+              Have a project in mind? Let&apos;s work together to bring your ideas to
               life.
             </p>
           </div>

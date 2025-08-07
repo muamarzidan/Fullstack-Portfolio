@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '../../../../lib/prisma'
-import { getSession } from '../../../../lib/auth'
+import { NextRequest, NextResponse } from 'next/server';
 
-// GET - Fetch all projects
+import { prisma } from '../../../../lib/prisma';
+import { getSession } from '../../../../lib/auth';
+
+
 export async function GET() {
     try {
         const projects = await prisma.project.findMany({
@@ -17,12 +18,10 @@ export async function GET() {
             { status: 500 }
         )
     }
-}
+};
 
-// POST - Create new project
 export async function POST(request: NextRequest) {
     try {
-        // Check authentication for protected operations
         const session = await getSession(request)
         if (!session) {
             return NextResponse.json(
@@ -56,4 +55,4 @@ export async function POST(request: NextRequest) {
             { status: 500 }
         )
     }
-}
+};
