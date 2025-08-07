@@ -20,89 +20,86 @@ interface ContactForm {
 };
 
 export default function DashboardContacsPage() {
-    const [contacts, setContacts] = useState<Contact[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState('')
-    const [showForm, setShowForm] = useState(false)
-    const [editingProject, setEditingProject] = useState<Contact | null>(null)
+    const [contacts, setContacts] = useState<Contact[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [showForm, setShowForm] = useState(false);
+    const [editingProject, setEditingProject] = useState<Contact | null>(null);
     const [formData, setFormData] = useState<ContactForm>({
         name: '',
         email: '',
         message: ''
-    })
-    const [formLoading, setFormLoading] = useState(false)
+    });
+    const [formLoading, setFormLoading] = useState(false);
 
     useEffect(() => {
         fetchProjects()
-    }, [])
+    }, []);
 
     const fetchProjects = async () => {
         try {
-            setLoading(true)
-            const response = await fetch('/api/contact')
-            console.error('Error fetching contacts:', response)
+            setLoading(true);
+            const response = await fetch('/api/contact');
 
             if (!response.ok) {
-                throw new Error('Failed to fetch contacts')
-            }
+                throw new Error('Failed to fetch contacts');
+            };
 
-            const data = await response.json()
-            setContacts(data)
+            const data = await response.json();
+            setContacts(data);
         } catch (err) {
-            setError('Failed to load contacts')
-            console.error('Error fetching contacts:', err)
+            setError('Failed to load contacts');
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     }
 
     const handleCreate = () => {
-        setEditingProject(null)
-        setFormData({ name: '', email: '', message: '' })
-        setShowForm(true)
-    }
+        setEditingProject(null);
+        setFormData({ name: '', email: '', message: '' });
+        setShowForm(true);
+    };
 
     const handleEdit = (project: Contact) => {
-        setEditingProject(project)
+        setEditingProject(project);
         setFormData({
             name: project.name,
             email: project.email,
             message: project.message
-        })
-        setShowForm(true)
-    }
+        });
+        setShowForm(true);
+    };
 
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this contact?')) {
-            return
-        }
+            return;
+        };
 
         try {
             const response = await fetch(`/api/contact/${id}`, {
                 method: 'DELETE'
-            })
+            });
 
             if (!response.ok) {
-                throw new Error('Failed to delete project')
-            }
+                throw new Error('Failed to delete project');
+            };
 
-            await fetchProjects()
+            await fetchProjects();
         } catch (err) {
-            alert('Failed to delete project')
-            console.error('Error deleting project:', err)
-        }
-    }
+            alert('Failed to delete project');
+        };
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setFormLoading(true)
+        e.preventDefault();
+        setFormLoading(true);
 
         try {
             const url = editingProject
                 ? `/api/contact/${editingProject.id}`
-                : '/api/contact'
+                : '/api/contact';
 
-            const method = editingProject ? 'PUT' : 'POST'
+            const method = editingProject ? 'PUT' : 'POST';
 
             const response = await fetch(url, {
                 method,
@@ -110,28 +107,27 @@ export default function DashboardContacsPage() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(formData)
-            })
+            });
 
             if (!response.ok) {
-                throw new Error(`Failed to ${editingProject ? 'update' : 'create'} project`)
-            }
+                throw new Error(`Failed to ${editingProject ? 'update' : 'create'} project`);
+            };
 
-            setShowForm(false)
-            setEditingProject(null)
-            setFormData({ name: '', email: '', message: '' })
-            await fetchProjects()
+            setShowForm(false);
+            setEditingProject(null);
+            setFormData({ name: '', email: '', message: '' });
+            await fetchProjects();
         } catch (err) {
-            alert(`Failed to ${editingProject ? 'update' : 'create'} project`)
-            console.error('Error submitting form:', err)
+            alert(`Failed to ${editingProject ? 'update' : 'create'} project`);
         } finally {
-            setFormLoading(false)
+            setFormLoading(false);
         }
     }
 
     const handleCancel = () => {
-        setShowForm(false)
-        setEditingProject(null)
-        setFormData({ name: '', email: '', message: '' })
+        setShowForm(false);
+        setEditingProject(null);
+        setFormData({ name: '', email: '', message: '' });
     }
 
     if (loading) {
@@ -140,7 +136,7 @@ export default function DashboardContacsPage() {
                 <div className="text-lg text-gray-600">Loading contacts...</div>
             </div>
         )
-    }
+    };
 
     if (error) {
         return (
@@ -148,7 +144,7 @@ export default function DashboardContacsPage() {
                 <div className="text-lg text-red-600">{error}</div>
             </div>
         )
-    }
+    };
 
     return (
         <div>

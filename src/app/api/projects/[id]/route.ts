@@ -31,7 +31,6 @@ export async function PUT(
 
         return NextResponse.json(project)
     } catch (error) {
-        console.error('Error updating project:', error)
         return NextResponse.json(
             { error: 'Failed to update project' },
             { status: 500 }
@@ -63,7 +62,6 @@ export async function DELETE(
             { status: 200 }
         )
     } catch (error) {
-        console.error('Error deleting project:', error)
         return NextResponse.json(
             { error: 'Failed to delete project' },
             { status: 500 }

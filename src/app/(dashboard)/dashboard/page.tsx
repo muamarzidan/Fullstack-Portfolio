@@ -33,7 +33,6 @@ export default function DashboardPage() {
                 });
             }
         } catch (error) {
-            console.error("Error fetching stats:", error);
             setStats((prev) => ({ ...prev, loading: false }));
         }
     };

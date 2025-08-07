@@ -48,17 +48,16 @@ export async function verifyCredentials(username: string, password: string) {
     try {
         const user = await prisma.user.findUnique({
             where: { username }
-        })
+        });
 
-        if (!user) return null
+        if (!user) return null;
 
-        const isValid = await bcrypt.compare(password, user.password)
-        if (!isValid) return null
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) return null;
 
-        return { id: user.id, username: user.username }
+        return { id: user.id, username: user.username };
     } catch (error) {
-        console.error('Credential verification failed:', error)
-        return null
+        return null;
     };
 };
 

@@ -49,7 +49,6 @@ export default function DashboardProjectsPage() {
             setProjects(data)
         } catch (err) {
             setError('Failed to load projects')
-            console.error('Error fetching projects:', err)
         } finally {
             setLoading(false)
         }
@@ -88,7 +87,6 @@ export default function DashboardProjectsPage() {
             await fetchProjects()
         } catch (err) {
             alert('Failed to delete project')
-            console.error('Error deleting project:', err)
         }
     }
 
@@ -121,7 +119,6 @@ export default function DashboardProjectsPage() {
             await fetchProjects()
         } catch (err) {
             alert(`Failed to ${editingProject ? 'update' : 'create'} project`)
-            console.error('Error submitting form:', err)
         } finally {
             setFormLoading(false)
         }
