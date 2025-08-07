@@ -3,13 +3,13 @@ import { NextRequest } from 'next/server';
 import { prisma } from './prisma';
 import bcrypt from 'bcryptjs';
 
+
 const secretKey = process.env.NEXTAUTH_SECRET;
+const key = new TextEncoder().encode(secretKey);
 
 if (!secretKey) {
     throw new Error('NEXTAUTH_SECRET environment variable is required');
-}
-
-const key = new TextEncoder().encode(secretKey);
+};
 
 export async function encrypt(payload: any) {
     return await new SignJWT(payload)
@@ -72,4 +72,4 @@ export async function verifyCredentials(username: string, password: string) {
 export async function hashPassword(password: string): Promise<string> {
     const saltRounds = 12; // Increased from default for better security
     return await bcrypt.hash(password, saltRounds);
-}
+};
