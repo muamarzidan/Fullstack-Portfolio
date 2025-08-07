@@ -1,34 +1,34 @@
 'use client'
 import { useEffect, useState } from 'react';
 
-import ProjectCard from '../../../../../components/ProjectCard';
+import ContactCard from '../../../../../components/ContactCard';
 
 
-interface Project {
+interface Contact {
     id: string
-    title: string
-    description: string
-    image: string
+    name: string
+    email: string
+    message: string
     createdAt: string
     updatedAt: string
-}
+};
 
-interface ProjectForm {
-    title: string
-    description: string
-    image: string
-}
+interface ContactForm {
+    name: string
+    email: string
+    message: string
+};
 
-export default function DashboardProjectsPage() {
-    const [projects, setProjects] = useState<Project[]>([])
+export default function DashboardContacsPage() {
+    const [contacts, setContacts] = useState<Contact[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
     const [showForm, setShowForm] = useState(false)
-    const [editingProject, setEditingProject] = useState<Project | null>(null)
-    const [formData, setFormData] = useState<ProjectForm>({
-        title: '',
-        description: '',
-        image: ''
+    const [editingProject, setEditingProject] = useState<Contact | null>(null)
+    const [formData, setFormData] = useState<ContactForm>({
+        name: '',
+        email: '',
+        message: ''
     })
     const [formLoading, setFormLoading] = useState(false)
 
@@ -39,17 +39,18 @@ export default function DashboardProjectsPage() {
     const fetchProjects = async () => {
         try {
             setLoading(true)
-            const response = await fetch('/api/projects')
+            const response = await fetch('/api/contact')
+            console.error('Error fetching contacts:', response)
 
             if (!response.ok) {
-                throw new Error('Failed to fetch projects')
+                throw new Error('Failed to fetch contacts')
             }
 
             const data = await response.json()
-            setProjects(data)
+            setContacts(data)
         } catch (err) {
-            setError('Failed to load projects')
-            console.error('Error fetching projects:', err)
+            setError('Failed to load contacts')
+            console.error('Error fetching contacts:', err)
         } finally {
             setLoading(false)
         }
@@ -57,27 +58,27 @@ export default function DashboardProjectsPage() {
 
     const handleCreate = () => {
         setEditingProject(null)
-        setFormData({ title: '', description: '', image: '' })
+        setFormData({ name: '', email: '', message: '' })
         setShowForm(true)
     }
 
-    const handleEdit = (project: Project) => {
+    const handleEdit = (project: Contact) => {
         setEditingProject(project)
         setFormData({
-            title: project.title,
-            description: project.description,
-            image: project.image
+            name: project.name,
+            email: project.email,
+            message: project.message
         })
         setShowForm(true)
     }
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this project?')) {
+        if (!confirm('Are you sure you want to delete this contact?')) {
             return
         }
 
         try {
-            const response = await fetch(`/api/projects/${id}`, {
+            const response = await fetch(`/api/contact/${id}`, {
                 method: 'DELETE'
             })
 
@@ -98,8 +99,8 @@ export default function DashboardProjectsPage() {
 
         try {
             const url = editingProject
-                ? `/api/projects/${editingProject.id}`
-                : '/api/projects'
+                ? `/api/contact/${editingProject.id}`
+                : '/api/contact'
 
             const method = editingProject ? 'PUT' : 'POST'
 
@@ -117,7 +118,7 @@ export default function DashboardProjectsPage() {
 
             setShowForm(false)
             setEditingProject(null)
-            setFormData({ title: '', description: '', image: '' })
+            setFormData({ name: '', email: '', message: '' })
             await fetchProjects()
         } catch (err) {
             alert(`Failed to ${editingProject ? 'update' : 'create'} project`)
@@ -130,13 +131,13 @@ export default function DashboardProjectsPage() {
     const handleCancel = () => {
         setShowForm(false)
         setEditingProject(null)
-        setFormData({ title: '', description: '', image: '' })
+        setFormData({ name: '', email: '', message: '' })
     }
 
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="text-lg text-gray-600">Loading projects...</div>
+                <div className="text-lg text-gray-600">Loading contacts...</div>
             </div>
         )
     }
@@ -153,14 +154,14 @@ export default function DashboardProjectsPage() {
         <div>
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Projects Management</h1>
-                    <p className="text-gray-600 mt-2">Manage your portfolio projects</p>
+                    <h1 className="text-3xl font-bold text-gray-900">Contacts Management</h1>
+                    <p className="text-gray-600 mt-2">Manage your portfolio contacts</p>
                 </div>
                 <button
                     onClick={handleCreate}
                     className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                    Add New Project
+                    Add New Contact
                 </button>
             </div>
 
@@ -180,7 +181,7 @@ export default function DashboardProjectsPage() {
                                 <input
                                     type="text"
                                     required
-                                    value={formData.title}
+                                    value={formData.name}
                                     onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                     placeholder="Enter project title"
@@ -194,7 +195,7 @@ export default function DashboardProjectsPage() {
                                 <textarea
                                     required
                                     rows={4}
-                                    value={formData.description}
+                                    value={formData.email}
                                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                     placeholder="Enter project description"
@@ -208,10 +209,9 @@ export default function DashboardProjectsPage() {
                                 <input
                                     type="url"
                                     required
-                                    value={formData.image}
+                                    value={formData.message}
                                     onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                    placeholder="https://example.com/image.jpg"
                                 />
                             </div>
 
@@ -236,11 +236,11 @@ export default function DashboardProjectsPage() {
                 </div>
             )}
 
-            {/* Projects Grid */}
-            {projects.length === 0 ? (
+            {/* Contact Grid */}
+            {contacts.length === 0 ? (
                 <div className="text-center py-12 bg-white rounded-lg shadow">
-                    <div className="text-gray-500 text-lg mb-2">No projects found</div>
-                    <p className="text-gray-400 mb-4">Create your first project to get started</p>
+                    <div className="text-gray-500 text-lg mb-2">No contacts found</div>
+                    <p className="text-gray-400 mb-4">Create your first contact to get started</p>
                     <button
                         onClick={handleCreate}
                         className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-700"
@@ -250,10 +250,10 @@ export default function DashboardProjectsPage() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {projects.map((project) => (
-                        <ProjectCard
-                            key={project.id}
-                            project={project}
+                    {contacts.map((ctc) => (
+                        <ContactCard
+                            key={ctc.id}
+                            contact={ctc}
                             showActions={true}
                             onEdit={handleEdit}
                             onDelete={handleDelete}

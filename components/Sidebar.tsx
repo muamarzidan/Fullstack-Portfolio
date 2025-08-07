@@ -16,6 +16,11 @@ export default function Sidebar() {
             href: '/dashboard/projects',
             label: 'Projects',
             icon: '📁'
+        },
+        {
+            href: '/dashboard/contacts',
+            label: 'Contacts',
+            icon: '📧'
         }
     ]
 

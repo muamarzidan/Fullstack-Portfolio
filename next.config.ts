@@ -26,9 +26,9 @@ const nextConfig = {
         return config;
     },
     trailingSlash: false,
-    experimental: {
-        forceSwcTransforms: true,
-    },
+    // experimental: {
+    //     forceSwcTransforms: true,
+    // },
 };
 
 export default nextConfig;

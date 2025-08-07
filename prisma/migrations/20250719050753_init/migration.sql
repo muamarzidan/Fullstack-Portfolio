@@ -1,4 +1,3 @@
--- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
     "username" TEXT NOT NULL,
@@ -9,7 +8,6 @@ CREATE TABLE "users" (
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "projects" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -21,5 +19,15 @@ CREATE TABLE "projects" (
     CONSTRAINT "projects_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
+CREATE TABLE "contacts" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "contacts_pkey" PRIMARY KEY ("id")
+);
+
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
