@@ -22,30 +22,24 @@ export async function encrypt(payload: any) {
 
 export async function decrypt(input: string): Promise<any> {
     try {
-        console.log('Attempting to decrypt session token');
         const { payload } = await jwtVerify(input, key, {
             algorithms: ['HS256'],
         });
-        console.log('Decryption successful');
         return payload;
     } catch (error) {
-        console.error('JWT verification failed:', error);
         throw error;
     }
 };
 
 export async function getSession(request: NextRequest) {
     const sessionCookie = request.cookies.get('session')?.value;
-    console.log('getSession called, cookie value:', sessionCookie ? 'exists' : 'not found');
     
     if (!sessionCookie) return null;
     
     try {
         const decrypted = await decrypt(sessionCookie);
-        console.log('Session decrypted successfully:', decrypted);
         return decrypted;
     } catch (error) {
-        console.error('Session decryption failed:', error);
         return null;
     }
 };
