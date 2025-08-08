@@ -40,5 +40,10 @@ model Contact {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@index([name])
+  @@index([email])
+  @@index([createdAt(sort: Desc)])
+  @@index([name, email])
+
   @@map("contacts")
 }

@@ -26,11 +26,10 @@ export default function LoginPage() {
                 body: JSON.stringify({ username, password }),
             });
 
-            const data = await response.json();
             if (response.ok) {
                 router.push("/dashboard");
             } else {
-                toast.error(data.error || "Login failed");
+                toast.error("Login failed :)");
             }
         } catch (err) {
             setError("An error occurred. Please try again.");
