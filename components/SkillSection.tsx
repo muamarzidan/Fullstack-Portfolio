@@ -7,8 +7,8 @@ import { Category, Ball } from "../types/skills";
 const categories: Category[] = [
     { title: "Novice", count: 3 },
     { title: "Advance Beginner", count: 6 },
-    { title: "Competent", count: 11 },
-    { title: "Proficient", count: 4 },
+    { title: "Competent", count: 9 },
+    { title: "Proficient", count: 6 },
 ];
 
 const imagesList = [
@@ -28,14 +28,14 @@ const imagesList = [
     "/assets/icons/figma.png",
     "/assets/icons/js_s6.png",
     "/assets/icons/typescript.webp",
-    "/assets/icons/nextjs-plain-8x.png",
-    "/assets/icons/boostap.png",
     "/assets/icons/vite.png",
     "/assets/icons/express.png",
     "/assets/icons/nbpm.png",
     "/assets/icons/github.png",
     "/assets/icons/git.png",
     // Proficient
+    "/assets/icons/boostap.png",
+    "/assets/icons/nextjs-plain-8x.png",
     "/assets/icons/taiwlind.png",
     "/assets/icons/html_5.png",
     "/assets/icons/css_3.webp",
@@ -73,7 +73,7 @@ export default function SkillsGrid() {
     let imageIndex = 0;
 
     return (
-        <div className="max-w-7xl mx-auto px-4 xl:px-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-items-center gap-16 sm:gap-12 lg:gap-0">
             {categories.map((cat, idx) => {
                 const imgs = imagesList.slice(imageIndex, imageIndex + cat.count);
                 imageIndex += cat.count;
@@ -119,7 +119,7 @@ function BouncingIconsBox({
 
         const W = canvas.width;
         const H = canvas.height;
-        const MAX_SPEED = 0.8;
+        const MAX_SPEED = 0.5;
 
         const loadedImgs: HTMLImageElement[] = [];
         let loadedCount = 0;
@@ -172,7 +172,7 @@ function BouncingIconsBox({
             }));
 
             ballsRef.current = balls;
-        }
+        };
 
         function startAnimation() {
             if (isAnimatingRef.current) return;
@@ -184,12 +184,10 @@ function BouncingIconsBox({
                 ctx.clearRect(0, 0, W, H);
 
                 ballsRef.current.forEach((ball) => {
-                    // Hanya update posisi jika ball tidak sedang di-hover
                     if (!ball.isHovered) {
                         ball.x += ball.dx;
                         ball.y += ball.dy;
 
-                        // Pantulan horizontal
                         if (ball.x <= 0) {
                             ball.x = 0;
                             ball.dx = Math.abs(ball.dx);
@@ -198,7 +196,6 @@ function BouncingIconsBox({
                             ball.dx = -Math.abs(ball.dx);
                         }
 
-                        // Pantulan vertikal
                         if (ball.y <= 0) {
                             ball.y = 0;
                             ball.dy = Math.abs(ball.dy);
@@ -208,7 +205,6 @@ function BouncingIconsBox({
                         }
                     }
 
-                    // Gambar ball jika image sudah loaded
                     const img = loadedImagesRef.current[ball.imgIndex];
                     if (img && img.complete && img.naturalWidth > 0) {
                         ctx.drawImage(
@@ -222,12 +218,11 @@ function BouncingIconsBox({
                 });
 
                 animationIdRef.current = requestAnimationFrame(animate);
-            }
+            };
 
             animate();
-        }
+        };
 
-        // Event listeners untuk mouse
         function handleMouseMove(e: MouseEvent) {
             const rect = canvas.getBoundingClientRect();
             const mouseX = e.clientX - rect.left;
@@ -246,7 +241,6 @@ function BouncingIconsBox({
                 ball.isHovered = isCurrentlyHovered;
 
                 if (isCurrentlyHovered && !wasHovered) {
-                    // Baru mulai hover
                     hoveredBallFound = true;
                     const imageName = images[ball.imgIndex];
                     const fileName = imageName.split('/').pop() || '';
@@ -259,7 +253,6 @@ function BouncingIconsBox({
                         y: e.clientY - 40
                     });
                 } else if (isCurrentlyHovered) {
-                    // Masih hover
                     hoveredBallFound = true;
                     setTooltip(prev => ({
                         ...prev,
@@ -272,14 +265,14 @@ function BouncingIconsBox({
             if (!hoveredBallFound) {
                 setTooltip({ show: false, text: "", x: 0, y: 0 });
             }
-        }
+        };
 
         function handleMouseLeave() {
             ballsRef.current.forEach((ball) => {
                 ball.isHovered = false;
             });
             setTooltip({ show: false, text: "", x: 0, y: 0 });
-        }
+        };
 
         canvas.addEventListener('mousemove', handleMouseMove);
         canvas.addEventListener('mouseleave', handleMouseLeave);
@@ -296,9 +289,9 @@ function BouncingIconsBox({
 
     return (
         <>
-            <div className="relative w-64 h-64 bg-white rounded-xl shadow-xl shadow-neutral-200 border-1 border-gray-200 xl:min-w-[280px]">
-                <div className="absolute -top-5 z-30 left-1/2 transform -translate-x-1/2 text-center bg-white py-2 rounded-t-lg min-w-[160px] shadow-lg rounded-lg border-1 border-gray-100 shadow-neutral-200">
-                    <span className="text-black text-sm font-medium whitespace-nowrap">
+            <div className="relative w-72 sm:w-64 xl:min-w-[280px] h-64 bg-white dark:bg-gray-900 rounded-xl shadow-lg sm:shadow-xl shadow-xl/50 shadow-neutral-200 dark:shadow-gray-950 border-1 border-gray-200 dark:border-blue-200">
+                <div className="absolute -top-5 z-30 left-1/2 transform -translate-x-1/2 text-center bg-white dark:bg-gray-950 py-2 rounded-t-lg min-w-[160px] rounded-lg border-1 border-gray-200 dark:border-blue-200">
+                    <span className="text-gray-900 dark:text-white text-sm font-medium whitespace-nowrap">
                         {title}
                     </span>
                 </div>
@@ -307,11 +300,11 @@ function BouncingIconsBox({
                     ref={canvasRef}
                     width={256}
                     height={256}
-                    className="block cursor-pointer w-full h-full"
+                    className="block w-full h-full"
                 />
             </div>
             
-            {/* Tooltip */}
+            {/* Tooltip When Hovering */}
             {tooltip.show && (
                 <div
                     className="fixed z-50 bg-gray-800 text-white px-2 py-1 rounded text-sm pointer-events-none shadow-lg"

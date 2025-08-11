@@ -160,7 +160,7 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="w-full h-full -mt-16 pt-32 pb-36">
-        <div className="max-w-7xl flex justify-between gap-4 mx-auto">
+        <div className="max-w-7xl flex justify-between gap-4 mx-auto px-4 xl:px-0">
           {/* Left Section */}
           <div className="hidden md:flex w-full flex-col justify-center gap-10">
             <div className="space-y-4">
@@ -206,16 +206,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="skills" className="py-30 bg-white dark:bg-gray-900 transition-colors">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">
+      <section id="skills" className="py-32 bg-white dark:bg-gray-900 transition-colors">
+        <div className="max-w-7xl flex flex-col justify-between gap-4 mx-auto px-4 xl:px-0 space-y-10 sm:space-y-20">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-200 sm:text-4xl">
               My Skills
             </h2>
-            <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-300 lg:mx-auto">
-              Languanges, Technologies, & tools I work with to build amazing applications
+            <p className="mt-4 text-base sm:text-xl text-gray-600 dark:text-gray-300 lg:mx-auto">
+              Languages, Technologies, & tools I work with to build any applications
             </p>
           </div>
-        <SkillsGrid />
+          <SkillsGrid />
+        </div>
       </section>
 
       {/* <div className='mx-auto -mt-16 w-full h-full flex items-center justify-center relative'>
@@ -302,7 +304,7 @@ export default function HomePage() {
       </section> */}
 
       {/* Project Section */}
-      <section id="projects" className="py-30 bg-white dark:bg-gray-800 transition-colos max-w-7xl mx-auto h-fit relative px-4 xl:px-0">
+      <section id="projects" className="py-32 bg-white dark:bg-gray-800 transition-colos max-w-7xl mx-auto h-fit relative px-4 xl:px-0">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-black dark:text-white sm:text-4xl">
             My Projects
@@ -324,7 +326,7 @@ export default function HomePage() {
       {/* Contact Section */}
       <section
         id="contact"
-        className="py-30 bg-white dark:bg-gray-900 transition-colors"
+        className="py-32 bg-white dark:bg-gray-900 transition-colors"
       >
         <div className="max-w-7xl mx-auto px-4 xl:px-0">
           <div className="text-center mb-16">
