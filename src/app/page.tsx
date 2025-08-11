@@ -7,6 +7,7 @@ import { FaGithub } from "react-icons/fa6";
 import { FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
+import SkillsGrid from "../../components/SkillSection";
 
 import Navbar from "../../components/Navbar";
 import Light from "../../components/Light";
@@ -205,6 +206,18 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section id="skills" className="py-30 bg-white dark:bg-gray-900 transition-colors">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">
+              My Skills
+            </h2>
+            <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-300 lg:mx-auto">
+              Languanges, Technologies, & tools I work with to build amazing applications
+            </p>
+          </div>
+        <SkillsGrid />
+      </section>
+
       {/* <div className='mx-auto -mt-16 w-full h-full flex items-center justify-center relative'>
         <Light
           raysOrigin="top-center"
@@ -249,7 +262,7 @@ export default function HomePage() {
       </div> */}
 
       {/* Skills Section */}
-      <section
+      {/* <section
         id="skills"
         className="py-30 bg-white dark:bg-gray-800 transition-colors"
       >
@@ -286,7 +299,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Project Section */}
       <section id="projects" className="py-30 bg-white dark:bg-gray-800 transition-colos max-w-7xl mx-auto h-fit relative px-4 xl:px-0">
