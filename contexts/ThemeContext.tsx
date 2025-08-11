@@ -37,7 +37,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         if (mounted) {
             try {
-                localStorage.setItem("theme", theme);
+                localStorage.setItem("THEME", theme);
                 document.documentElement.classList.toggle("dark", theme === "dark");
             } catch (error) {
                 console.warn("Could not save theme preference");
