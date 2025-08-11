@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 
 import { ThemeProvider } from "../../contexts/ThemeContext";
 import ToastProvider from "../../components/ToasterProvider";
+import MaintenanceModal from "../../components/MaintenanceModal";
 import "./globals.css";
 
 
@@ -31,6 +32,7 @@ export default function RootLayout({
         className={`${poppins.variable} font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`}
       >
         <ToastProvider />
+        <MaintenanceModal />
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

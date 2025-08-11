@@ -297,7 +297,7 @@ function BouncingIconsBox({
     return (
         <>
             <div className="relative w-64 h-64 bg-white rounded-xl shadow-xl shadow-neutral-200 border-1 border-gray-200 xl:min-w-[280px]">
-                <div className="absolute -top-5 z-50 left-1/2 transform -translate-x-1/2 text-center bg-white py-2 rounded-t-lg min-w-[160px] shadow-lg rounded-lg border-1 border-gray-100 shadow-neutral-200">
+                <div className="absolute -top-5 z-30 left-1/2 transform -translate-x-1/2 text-center bg-white py-2 rounded-t-lg min-w-[160px] shadow-lg rounded-lg border-1 border-gray-100 shadow-neutral-200">
                     <span className="text-black text-sm font-medium whitespace-nowrap">
                         {title}
                     </span>
