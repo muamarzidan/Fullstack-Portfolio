@@ -1,20 +1,13 @@
 "use client";
-
 import { useEffect, useState } from "react";
+
 import Navbar from "../../../components/Navbar";
 import ProjectCard from "../../../components/ProjectCard";
+import { IProject } from "../../../types/projects";
 
-interface Project {
-    id: string;
-    title: string;
-    description: string;
-    image: string;
-    createdAt: string;
-    updatedAt: string;
-}
 
 export default function ProjectsPage() {
-    const [projects, setProjects] = useState<Project[]>([]);
+    const [projects, setProjects] = useState<IProject[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 

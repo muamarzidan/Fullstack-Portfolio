@@ -1,25 +1,12 @@
-interface Contact {
-    id: string
-    name: string
-    email: string
-    message: string
-    createdAt: string
-    updatedAt: string
-};
+import { IContactCardProps } from "../types/contacts";
 
-interface ContactCardProps {
-    contact: Contact
-    showActions?: boolean
-    onEdit?: (contact: Contact) => void
-    onDelete?: (id: string) => void
-};
 
 export default function ContactCard({
     contact,
     showActions = false,
     onEdit,
     onDelete
-}: ContactCardProps) {
+}: IContactCardProps) {
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden border">
 

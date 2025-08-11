@@ -11,37 +11,16 @@ import {
     ChevronDoubleRightIcon
 } from '@heroicons/react/24/outline';
 
+import { IContact, IContactForm, IPaginationData } from '../../../../../types/contacts';
 
-interface Contact {
-    id: string
-    name: string
-    email: string
-    message: string
-    createdAt: string
-    updatedAt: string
-};
-
-interface ContactForm {
-    name: string
-    email: string
-    message: string
-};
-
-interface PaginationData {
-    currentPage: number
-    totalPages: number
-    totalContacts: number
-    hasNext: boolean
-    hasPrev: boolean
-};
 
 export default function DashboardContactsPage() {
-    const [contacts, setContacts] = useState<Contact[]>([]);
+    const [contacts, setContacts] = useState<IContact[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showForm, setShowForm] = useState(false);
-    const [editingContact, setEditingContact] = useState<Contact | null>(null);
-    const [formData, setFormData] = useState<ContactForm>({
+    const [editingContact, setEditingContact] = useState<IContact | null>(null);
+    const [formData, setFormData] = useState<IContactForm>({
         name: '',
         email: '',
         message: ''
@@ -50,7 +29,7 @@ export default function DashboardContactsPage() {
     const [searchInput, setSearchInput] = useState('');
     const [appliedSearch, setAppliedSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [pagination, setPagination] = useState<PaginationData>({
+    const [pagination, setPagination] = useState<IPaginationData>({
         currentPage: 1,
         totalPages: 1,
         totalContacts: 0,
@@ -101,7 +80,7 @@ export default function DashboardContactsPage() {
         setShowForm(true);
     };
 
-    const handleEdit = (contact: Contact) => {
+    const handleEdit = (contact: IContact) => {
         setEditingContact(contact);
         setFormData({
             name: contact.name,
@@ -205,7 +184,7 @@ export default function DashboardContactsPage() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="">
+            <div className="mb-10">
                 <div className="flex justify-between">
                     <h2 className="text-3xl font-bold text-gray-900">Contact Management</h2>
                 </div>
@@ -221,13 +200,13 @@ export default function DashboardContactsPage() {
                                 placeholder="Search by name, email, or message..."
                                 value={searchInput}
                                 onChange={(e) => setSearchInput(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border text-gray-900 border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-900 focus:border-transparent"
+                                className="w-full pl-10 pr-4 py-2 text-sm border text-gray-900 border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-900 focus:border-transparent"
                             />
                             <MagnifyingGlassIcon className="h-5 w-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
                         </div>
                         <button
                             type="submit"
-                            className="px-4 py-2 text-base bg-blue-950 text-white rounded-lg hover:bg-blue-900 transition-colors cursor-pointer"
+                            className="px-4 py-2 text-sm bg-blue-950 text-white rounded-lg hover:bg-blue-900 transition-colors cursor-pointer"
                         >
                             Search
                         </button>
@@ -248,7 +227,7 @@ export default function DashboardContactsPage() {
 
                     <button
                         onClick={handleCreate}
-                        className="inline-flex gap-2 items-center px-4 py-2 bg-green-700 text-base text-white rounded-lg hover:bg-green-900 transition-colors cursor-pointer"
+                        className="inline-flex text-sm gap-2 items-center px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-900 transition-colors cursor-pointer"
                     >
                         <PlusIcon className="h-4 w-4" />
                         Add Contact
