@@ -55,4 +55,16 @@ export interface IProjectForm {
     url: string;
     statusShow: boolean;
     gradient: string;
-}
+};
+export interface IProjectsResponse {
+    projects: IProject[];
+    pagination: {
+        currentPage: number;
+        totalPages: number;
+        totalProjects: number;
+        hasNext: boolean;
+        hasPrev: boolean;
+        limit: number;
+    };
+    search: string | null;
+};

@@ -1,4 +1,5 @@
-import { IProjectCardProps } from "../types/projects"
+import { IProjectCardProps } from "../types/projects";
+
 
 export default function ProjectCard({
     project,
@@ -22,6 +23,7 @@ export default function ProjectCard({
             </div>
 
             <div className="p-4">
+                {/* Title */}
                 <div className="flex justify-between items-start mb-2">
                     <h3 className="text-lg font-semibold text-gray-900 truncate">
                         {project.title}
@@ -29,6 +31,7 @@ export default function ProjectCard({
                     <span className="text-sm text-gray-500 ml-2 truncate">{project.company}</span>
                 </div>
                 
+                {/* Description */}
                 <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                     {project.description}
                 </p>

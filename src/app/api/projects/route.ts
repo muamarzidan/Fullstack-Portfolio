@@ -105,11 +105,110 @@ function validateProject(data: any) {
 
 export async function GET(request: NextRequest) {
     try {
-        const projects = await prisma.project.findMany({
-            orderBy: { createdAt: 'desc' }
-        });
+        const { searchParams } = new URL(request.url);
+        const page = parseInt(searchParams.get('page') || '1', 10);
+        const limit = parseInt(searchParams.get('limit') || '1000', 10);
+        const search = searchParams.get('search') || '';
+        const isPublic = searchParams.get('public') === 'true';
 
-        return NextResponse.json(projects);
+        // Validate pagination parameters
+        const validatedPage = Math.max(1, page);
+        const validatedLimit = Math.min(Math.max(1, limit), 10); // Max 10 items per page
+        const offset = (validatedPage - 1) * validatedLimit;
+        const whereClause: any = {};
+
+        if (isPublic) {
+            whereClause.statusShow = true;
+        };
+
+        if (search.trim()) {
+            whereClause.title = {
+                contains: search,
+                mode: 'insensitive' as const
+            };
+        };
+
+        // if (search.trim()) {
+        //     whereClause.OR = [
+        //         {
+        //             title: {
+        //                 contains: search,
+        //                 mode: 'insensitive' as const
+        //             }
+        //         },
+        //         {
+        //             description: {
+        //                 contains: search,
+        //                 mode: 'insensitive' as const
+        //             }
+        //         },
+        //         {
+        //             company: {
+        //                 contains: search,
+        //                 mode: 'insensitive' as const
+        //             }
+        //         },
+        //         {
+        //             role: {
+        //                 hasSome: search.split(' ').filter(word => word.length > 2)
+        //             }
+        //         },
+        //         {
+        //             techStack: {
+        //                 hasSome: search.split(' ').filter(word => word.length > 2)
+        //             }
+        //         }
+        //     ];
+        // };
+
+        // Execute queries in parallel for better performance
+        const [projects, totalCount] = await Promise.all([
+            prisma.project.findMany({
+                where: whereClause,
+                orderBy: { createdAt: 'desc' },
+                skip: offset,
+                take: validatedLimit,
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    image: true,
+                    company: true,
+                    role: true,
+                    techStack: true,
+                    url: true,
+                    statusShow: true,
+                    gradient: true,
+                    createdAt: true,
+                    updatedAt: true
+                }
+            }),
+            prisma.project.count({
+                where: whereClause
+            })
+        ]);
+
+        const totalPages = Math.ceil(totalCount / validatedLimit);
+        const hasNext = validatedPage < totalPages;
+        const hasPrev = validatedPage > 1;
+
+        // Check condition for public or dashboard
+        if (!searchParams.get('page') && !searchParams.get('limit') && !search) {
+            return NextResponse.json(projects);
+        };
+
+        return NextResponse.json({
+            projects,
+            pagination: {
+                currentPage: validatedPage,
+                totalPages,
+                totalProjects: totalCount,
+                hasNext,
+                hasPrev,
+                limit: validatedLimit
+            },
+            search: search.trim() || null
+        });
     } catch (error) {
         return NextResponse.json(
             { error: 'Failed to fetch projects' },
@@ -120,7 +219,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        const rateLimitResult = rateLimit(request, 5, 60 * 1000); // 5 requests per minute
+        const rateLimitResult = rateLimit(request, 5, 10 * 60 * 1000); // 5 posts per 10 minutes
         if (!rateLimitResult.success) {
             return NextResponse.json(
                 { error: rateLimitResult.message },
@@ -157,7 +256,7 @@ export async function POST(request: NextRequest) {
 
             if (existingTitleProject) {
                 throw new Error('ProjectExists');
-            }
+            };
 
             const project = await tx.project.create({
                 data: validation.data!

@@ -108,7 +108,7 @@ export async function PUT(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const rateLimitResult = rateLimit(request, 5, 60 * 1000); // 5 updates per minute
+        const rateLimitResult = rateLimit(request, 5, 10 * 60 * 1000); // 5 updates per 10 minutes
         if (!rateLimitResult.success) {
             return NextResponse.json(
                 { error: rateLimitResult.message },
@@ -209,7 +209,7 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const rateLimitResult = rateLimit(request, 2, 60 * 1000); // 3 deletions per minute
+        const rateLimitResult = rateLimit(request, 5, 10 * 60 * 1000); // 5 deletions per 10 minutes
         if (!rateLimitResult.success) {
             return NextResponse.json(
                 { error: rateLimitResult.message },

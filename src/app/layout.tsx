@@ -17,8 +17,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "MuzirO - Portfolio",
-  description:
-    "Fullstack Developer Portfolio built with Next.js, PostgreSQL, and Tailwind CSS",
+  description: "Web Developer Portfolio built with Next.js, PostgreSQL, and Tailwind CSS",
 };
 
 export default function RootLayout({

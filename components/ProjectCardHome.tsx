@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { IChromaGridProps, IChromaItem } from "../types/projects";
 import ProjectModal from "./ModalProjects";
 
+
 type SetterFn = (v: number | string) => void;
 const ChromaGrid: React.FC<IChromaGridProps> = ({
     items,
@@ -22,22 +23,7 @@ const ChromaGrid: React.FC<IChromaGridProps> = ({
     const setX = useRef<SetterFn | null>(null);
     const setY = useRef<SetterFn | null>(null);
     const pos = useRef({ x: 0, y: 0 });
-
-    const demo: IChromaItem[] = [
-        {
-            image: "/assets/images/projects/thumbnail_project_sunshine_MuzirO.png",
-            title: "Alex Rivera",
-            description: "Full Stack Developer",
-            company: "@alexrivera",
-            role: ["@alexrivera"],
-            techStack: ["@alexrivera"],
-            url: "https://github.com/",
-            statusShow: true,
-            gradient: "linear-gradient(145deg,#4F46E5,#000)",
-        },
-    ];
-
-    const data = items?.length ? items : demo;
+    const data = items;
 
     useEffect(() => {
         const el = rootRef.current;
@@ -102,10 +88,12 @@ const ChromaGrid: React.FC<IChromaGridProps> = ({
         setSelectedProject(null);
     };
 
-    if (!data.length) {
+    if (!data || data.length === 0) {
         return (
-            <div className="flex justify-center items-center py-20">
-                <div className="text-gray-500 text-lg">No projects found</div>
+            <div className="flex justify-center items-center py-32 min-h-[200px]">
+                <div className="text-gray-500 text-lg">
+                    Projects will be displayed soon.
+                </div>
             </div>
         );
     };
@@ -116,7 +104,9 @@ const ChromaGrid: React.FC<IChromaGridProps> = ({
                 ref={rootRef}
                 onPointerMove={handleMove}
                 onPointerLeave={handleLeave}
-                className={`relative w-full h-full flex flex-wrap justify-center items-start gap-3 ${className}`}
+                className={`relative w-full h-full flex flex-wrap 
+                ${data.length === 1 ? "justify-center" : "justify-center sm:justify-between"} 
+                gap-y-8 sm:gap-y-8 xl:gap-y-6 ${className}`}
                 style={
                     {
                         "--r": `${radius}px`,
@@ -130,11 +120,11 @@ const ChromaGrid: React.FC<IChromaGridProps> = ({
                         key={c.id || i}
                         onMouseMove={handleCardMove}
                         onClick={(e) => handleCardClick(c, e)}
-                        className="group relative flex flex-col w-[380px] rounded-[20px] overflow-hidden transition-colors duration-300 cursor-pointer gap-3 p-3"
+                        className="group relative flex flex-col w-10/12 sm:w-[300px] rounded-2xl overflow-hidden transition-colors duration-300 cursor-pointer gap-5 p-3"
                         style={
                             {
-                                background: c.gradient || "linear-gradient(145deg,#4F46E5,#000)",
-                                "--spotlight-color": "rgba(255,255,255, 0.3)",
+                                background: c.gradient,
+                                "--spotlight-color": "rgba(255,255,255, 0.2)",
                             } as React.CSSProperties
                         }
                     >
@@ -145,28 +135,28 @@ const ChromaGrid: React.FC<IChromaGridProps> = ({
                                     "radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%)",
                             }}
                         />
-                        <div className="relative z-10 flex-1 box-border">
+                        <div className="relative z-10 box-border">
                             <Image
                                 src={c.image}
                                 alt={c.title}
                                 width={500}
                                 height={500}
                                 loading="lazy"
-                                className="w-full h-[200px] object-cover rounded-[10px]"
+                                className="w-full h-[180px] object-cover rounded-xl"
                             />
                         </div>
-                        <footer className="relative z-10 text-white font-sans">
-                            <div className="space-y-1">
-                                <h3 className="text-lg font-bold leading-tight">{c.title}</h3>
+                        <div className="h-full flex flex-col justify-between gap-2">
+                            <footer className="relative z-10 text-white space-y-1">
+                                <h3 className="text-lg font-bold leading-tight line-clamp-2">{c.title}</h3>
                                 <p className="text-sm opacity-90 line-clamp-3">{c.description}</p>
-                            </div>
-                        </footer>
-                        <button 
-                                onClick={(e) => handleDetailClick(c, e)}
-                                className="relative z-10 w-full px-4 py-2 mt-2 bg-white/90 hover:bg-white text-black rounded-xl font-medium transition-all duration-200 hover:shadow-lg"
-                            >
-                                View Details
+                            </footer>
+                            <button 
+                                    onClick={(e) => handleDetailClick(c, e)}
+                                    className="relative z-10 w-full px-4 py-2 mt-2 backdrop-blur-2xl shadow-2xl bg-white/10 hover:bg-white/30 text-white rounded-xl font-medium transition-colors cursor-pointer"
+                                >
+                                    View Details
                             </button>
+                        </div>
                     </article>
                 ))}
                 <div

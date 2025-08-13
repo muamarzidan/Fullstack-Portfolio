@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { FiX, FiExternalLink, FiUsers, FiLayers } from 'react-icons/fi';
@@ -11,14 +11,13 @@ interface ProjectModalProps {
     isOpen: boolean;
     onClose: () => void;
 };
-
 const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose }) => {
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
-        }
+        };
 
         return () => {
             document.body.style.overflow = 'unset';
@@ -32,7 +31,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose })
 
         if (isOpen) {
             document.addEventListener('keydown', handleEscape);
-        }
+        };
 
         return () => {
             document.removeEventListener('keydown', handleEscape);
@@ -44,7 +43,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose })
     const handleOverlayClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
             onClose();
-        }
+        };
     };
 
     const handleVisitProject = () => {
@@ -65,7 +64,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose })
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 z-10 p-2 bg-black/20 hover:bg-black/40 rounded-full transition-colors"
+                    className="absolute top-4 right-4 z-10 p-2 bg-black/70 hover:bg-black rounded-full transition-colors cursor-pointer"
                     aria-label="Close modal"
                 >
                     <FiX className="w-5 h-5 text-white" />

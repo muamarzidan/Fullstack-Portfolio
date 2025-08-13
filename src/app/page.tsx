@@ -150,8 +150,8 @@ export default function HomePage() {
       </div> */}
 
       {/* Project Section */}
-      <section id="projects" className="py-32 bg-transparent transition-colos mx-auto h-fit relative">
-        <div className="max-w-7xl flex flex-col justify-between gap-4 mx-auto px-4 xl:px-0 space-y-10 sm:space-y-20">
+      <section id="projects" className="py-32 bg-transparent flex flex-col items-center relative">
+        <div className="max-w-7xl px-4 xl:px-0 space-y-10 sm:space-y-16">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-200 sm:text-4xl">
               My Projects
@@ -174,10 +174,10 @@ export default function HomePage() {
       {/* Contact Section */}
       <section
         id="contact"
-        className="py-32 bg-white dark:bg-gray-900 transition-colors"
+        className="py-32 bg-transparent"
       >
-        <div className="max-w-7xl mx-auto px-4 xl:px-0">
-          <div className="text-center mb-16">
+        <div className="max-w-7xl mx-auto px-4 xl:px-0 space-y-10 sm:space-y-16">
+          <div className="text-center">
             <h2 className="text-4xl font-bold text-black dark:text-white sm:text-4xl">
               Get In Touch
             </h2>

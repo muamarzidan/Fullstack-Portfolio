@@ -26,16 +26,16 @@ const imagesList = [
     // Competent
     "/assets/icons/nodejs.png",
     "/assets/icons/figma.png",
-    "/assets/icons/js_s6.png",
     "/assets/icons/typescript.webp",
     "/assets/icons/vite.png",
     "/assets/icons/express.png",
     "/assets/icons/nbpm.png",
     "/assets/icons/github.png",
     "/assets/icons/git.png",
-    // Proficient
-    "/assets/icons/boostap.png",
     "/assets/icons/nextjs-plain-8x.png",
+    // Proficient
+    "/assets/icons/js_s6.png",
+    "/assets/icons/boostap.png",
     "/assets/icons/taiwlind.png",
     "/assets/icons/html_5.png",
     "/assets/icons/css_3.webp",
@@ -119,13 +119,11 @@ function BouncingIconsBox({
 
         const W = canvas.width;
         const H = canvas.height;
-        const MAX_SPEED = 0.5;
 
         const loadedImgs: HTMLImageElement[] = [];
         let loadedCount = 0;
         let allImagesProcessed = false;
 
-        // Preload images dengan delay untuk area Competent
         const loadImagesWithDelay = async () => {
             for (let i = 0; i < images.length; i++) {
                 const src = images[i];
@@ -146,11 +144,10 @@ function BouncingIconsBox({
 
                 loadedImgs.push(img);
                 
-                // Tambah delay kecil untuk area Competent yang memiliki banyak gambar
                 if (title === "Competent" && i < images.length - 1) {
                     await new Promise(resolve => setTimeout(resolve, 50));
                 }
-            }
+            };
             
             allImagesProcessed = true;
             loadedImagesRef.current = loadedImgs;
@@ -161,18 +158,23 @@ function BouncingIconsBox({
         loadImagesWithDelay();
 
         function initializeBalls() {
-            const balls: Ball[] = images.map((_, idx) => ({
-                x: Math.random() * (W - 40),
-                y: Math.random() * (H - 40),
-                dx: (Math.random() - 0.5) * MAX_SPEED * 2,
-                dy: (Math.random() - 0.5) * MAX_SPEED * 2,
-                size: 40,
-                imgIndex: idx,
-                isHovered: false,
-            }));
+            const balls: Ball[] = images.map((_, idx) => {
+                const angle = Math.random() * Math.PI * 2;
+                const SPEED = 0.2;
+                return {
+                    x: Math.random() * (W - 40),
+                    y: Math.random() * (H - 40),
+                    dx: Math.cos(angle) * SPEED,
+                    dy: Math.sin(angle) * SPEED,
+                    size: 40,
+                    imgIndex: idx,
+                    isHovered: false,
+                };
+            });
 
             ballsRef.current = balls;
         };
+
 
         function startAnimation() {
             if (isAnimatingRef.current) return;
