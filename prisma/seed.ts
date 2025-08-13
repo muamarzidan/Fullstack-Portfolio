@@ -5,22 +5,22 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-    // const adminUsername = process.env.ADMIN_USERNAME;
-    // const adminPassword = process.env.ADMIN_PASSWORD;
-    // if (!adminUsername || !adminPassword) {
-    //     throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD environment variables are required')
-    // };
-    // const hashedPassword = await bcrypt.hash(adminPassword, 12)
-    // await prisma.user.upsert({
-    //     where: {
-    //         username: adminUsername,
-    //     },
-    //     update: {},
-    //     create: {
-    //         username: adminUsername,
-    //         password: hashedPassword,
-    //     },
-    // })
+    const adminUsername = process.env.ADMIN_USERNAME;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (!adminUsername || !adminPassword) {
+        throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD environment variables are required')
+    };
+    const hashedPassword = await bcrypt.hash(adminPassword, 12)
+    await prisma.user.upsert({
+        where: {
+            username: adminUsername,
+        },
+        update: {},
+        create: {
+            username: adminUsername,
+            password: hashedPassword,
+        },
+    })
     // const projects = await prisma.project.createMany({
     //     data: [
     //         {

@@ -5,6 +5,16 @@ export interface IContactCardProps {
     onEdit?: (contact: IContact) => void
     onDelete?: (id: string) => void
 };
+export interface IFormData {
+    name: string;
+    email: string;
+    message: string;
+};
+export interface IFormErrors {
+    name?: string;
+    email?: string;
+    message?: string;
+};
 
 
 
@@ -17,13 +27,11 @@ export interface IContact {
     createdAt: string
     updatedAt: string
 };
-
 export interface IContactForm {
     name: string
     email: string
     message: string
 };
-
 export interface IPaginationData {
     currentPage: number
     totalPages: number
