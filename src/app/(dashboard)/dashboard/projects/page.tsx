@@ -1,36 +1,32 @@
 'use client'
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import ProjectCard from '../../../../../components/ProjectCard';
-
-
-interface Project {
-    id: string
-    title: string
-    description: string
-    image: string
-    createdAt: string
-    updatedAt: string
-}
-
-interface ProjectForm {
-    title: string
-    description: string
-    image: string
-}
+import { IProject, IProjectForm } from '../../../../../types/projects';
+import ProjectCard from '../../../../../components/ProjectCardDashboard';
 
 export default function DashboardProjectsPage() {
-    const [projects, setProjects] = useState<Project[]>([])
+    const [projects, setProjects] = useState<IProject[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
     const [showForm, setShowForm] = useState(false)
-    const [editingProject, setEditingProject] = useState<Project | null>(null)
-    const [formData, setFormData] = useState<ProjectForm>({
+    const [editingProject, setEditingProject] = useState<IProject | null>(null)
+    const [formData, setFormData] = useState<IProjectForm>({
         title: '',
         description: '',
-        image: ''
+        image: '',
+        company: '',
+        role: [],
+        techStack: [],
+        url: '',
+        statusShow: true,
+        gradient: 'linear-gradient(145deg,#4F46E5,#000)'
     })
     const [formLoading, setFormLoading] = useState(false)
+    
+    // For array inputs
+    const [roleInput, setRoleInput] = useState('')
+    const [techStackInput, setTechStackInput] = useState('')
 
     useEffect(() => {
         fetchProjects()
@@ -49,6 +45,7 @@ export default function DashboardProjectsPage() {
             setProjects(data)
         } catch (err) {
             setError('Failed to load projects')
+            toast.error('Failed to load projects')
         } finally {
             setLoading(false)
         }
@@ -56,17 +53,37 @@ export default function DashboardProjectsPage() {
 
     const handleCreate = () => {
         setEditingProject(null)
-        setFormData({ title: '', description: '', image: '' })
+        setFormData({
+            title: '',
+            description: '',
+            image: '',
+            company: '',
+            role: [],
+            techStack: [],
+            url: '',
+            statusShow: true,
+            gradient: 'linear-gradient(145deg,#4F46E5,#000)'
+        })
+        setRoleInput('')
+        setTechStackInput('')
         setShowForm(true)
     }
 
-    const handleEdit = (project: Project) => {
+    const handleEdit = (project: IProject) => {
         setEditingProject(project)
         setFormData({
             title: project.title,
             description: project.description,
-            image: project.image
+            image: project.image,
+            company: project.company,
+            role: [...project.role],
+            techStack: [...project.techStack],
+            url: project.url,
+            statusShow: project.statusShow,
+            gradient: project.gradient
         })
+        setRoleInput('')
+        setTechStackInput('')
         setShowForm(true)
     }
 
@@ -81,17 +98,65 @@ export default function DashboardProjectsPage() {
             })
 
             if (!response.ok) {
-                throw new Error('Failed to delete project')
+                const errorData = await response.json()
+                throw new Error(errorData.error || 'Failed to delete project')
             }
 
+            toast.success('Project deleted successfully')
             await fetchProjects()
-        } catch (err) {
-            alert('Failed to delete project')
+        } catch (err: any) {
+            toast.error(err.message || 'Failed to delete project')
         }
+    }
+
+    const addRole = () => {
+        if (roleInput.trim() && !formData.role.includes(roleInput.trim())) {
+            setFormData(prev => ({
+                ...prev,
+                role: [...prev.role, roleInput.trim()]
+            }))
+            setRoleInput('')
+        }
+    }
+
+    const removeRole = (index: number) => {
+        setFormData(prev => ({
+            ...prev,
+            role: prev.role.filter((_, i) => i !== index)
+        }))
+    }
+
+    const addTechStack = () => {
+        if (techStackInput.trim() && !formData.techStack.includes(techStackInput.trim())) {
+            setFormData(prev => ({
+                ...prev,
+                techStack: [...prev.techStack, techStackInput.trim()]
+            }))
+            setTechStackInput('')
+        }
+    }
+
+    const removeTechStack = (index: number) => {
+        setFormData(prev => ({
+            ...prev,
+            techStack: prev.techStack.filter((_, i) => i !== index)
+        }))
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        
+        // Validation
+        if (formData.role.length === 0) {
+            toast.error('At least one role is required')
+            return
+        }
+        
+        if (formData.techStack.length === 0) {
+            toast.error('At least one tech stack item is required')
+            return
+        }
+        
         setFormLoading(true)
 
         try {
@@ -109,16 +174,26 @@ export default function DashboardProjectsPage() {
                 body: JSON.stringify(formData)
             })
 
+            const responseData = await response.json()
+
             if (!response.ok) {
-                throw new Error(`Failed to ${editingProject ? 'update' : 'create'} project`)
+                if (responseData.details) {
+                    // Handle validation errors
+                    responseData.details.forEach((detail: any) => {
+                        toast.error(`${detail.field}: ${detail.message}`)
+                    })
+                } else {
+                    throw new Error(responseData.error || `Failed to ${editingProject ? 'update' : 'create'} project`)
+                }
+                return
             }
 
             setShowForm(false)
             setEditingProject(null)
-            setFormData({ title: '', description: '', image: '' })
+            toast.success(`Project ${editingProject ? 'updated' : 'created'} successfully`)
             await fetchProjects()
-        } catch (err) {
-            alert(`Failed to ${editingProject ? 'update' : 'create'} project`)
+        } catch (err: any) {
+            toast.error(err.message || `Failed to ${editingProject ? 'update' : 'create'} project`)
         } finally {
             setFormLoading(false)
         }
@@ -127,7 +202,8 @@ export default function DashboardProjectsPage() {
     const handleCancel = () => {
         setShowForm(false)
         setEditingProject(null)
-        setFormData({ title: '', description: '', image: '' })
+        setRoleInput('')
+        setTechStackInput('')
     }
 
     if (loading) {
@@ -155,7 +231,7 @@ export default function DashboardProjectsPage() {
                 </div>
                 <button
                     onClick={handleCreate}
-                    className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                     Add New Project
                 </button>
@@ -163,60 +239,206 @@ export default function DashboardProjectsPage() {
 
             {/* Form Modal */}
             {showForm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                         <h2 className="text-xl font-semibold mb-4">
                             {editingProject ? 'Edit Project' : 'Add New Project'}
                         </h2>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Title
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={formData.title}
-                                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                    placeholder="Enter project title"
-                                />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Title *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={formData.title}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Enter project title"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Company *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={formData.company}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Enter company name"
+                                    />
+                                </div>
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Description
+                                    Description *
                                 </label>
                                 <textarea
                                     required
-                                    rows={4}
+                                    rows={3}
                                     value={formData.description}
                                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Enter project description"
                                 />
                             </div>
 
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Image URL *
+                                    </label>
+                                    <input
+                                        type="url"
+                                        required
+                                        value={formData.image}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="https://example.com/image.jpg"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Project URL *
+                                    </label>
+                                    <input
+                                        type="url"
+                                        required
+                                        value={formData.url}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="https://project-url.com"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Role Array Input */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Image URL
+                                    Roles * (at least 1 required)
                                 </label>
-                                <input
-                                    type="url"
-                                    required
-                                    value={formData.image}
-                                    onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                    placeholder="https://example.com/image.jpg"
-                                />
+                                <div className="flex gap-2 mb-2">
+                                    <input
+                                        type="text"
+                                        value={roleInput}
+                                        onChange={(e) => setRoleInput(e.target.value)}
+                                        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addRole())}
+                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Enter role (e.g., Frontend Developer)"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={addRole}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                    >
+                                        Add
+                                    </button>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    {formData.role.map((role, index) => (
+                                        <span
+                                            key={index}
+                                            className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                                        >
+                                            {role}
+                                            <button
+                                                type="button"
+                                                onClick={() => removeRole(index)}
+                                                className="ml-1 text-blue-600 hover:text-blue-800"
+                                            >
+                                                ×
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Tech Stack Array Input */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Tech Stack * (at least 1 required)
+                                </label>
+                                <div className="flex gap-2 mb-2">
+                                    <input
+                                        type="text"
+                                        value={techStackInput}
+                                        onChange={(e) => setTechStackInput(e.target.value)}
+                                        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTechStack())}
+                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Enter technology (e.g., React, Node.js)"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={addTechStack}
+                                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                    >
+                                        Add
+                                    </button>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    {formData.techStack.map((tech, index) => (
+                                        <span
+                                            key={index}
+                                            className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
+                                        >
+                                            {tech}
+                                            <button
+                                                type="button"
+                                                onClick={() => removeTechStack(index)}
+                                                className="ml-1 text-green-600 hover:text-green-800"
+                                            >
+                                                ×
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Gradient *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={formData.gradient}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, gradient: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="linear-gradient(145deg,#4F46E5,#000)"
+                                    />
+                                    <div 
+                                        className="w-full h-8 rounded mt-1"
+                                        style={{ background: formData.gradient }}
+                                    ></div>
+                                </div>
+
+                                <div className="flex items-center">
+                                    <label className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.statusShow}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, statusShow: e.target.checked }))}
+                                            className="mr-2"
+                                        />
+                                        <span className="text-sm font-medium text-gray-700">Show Status Indicator</span>
+                                    </label>
+                                </div>
                             </div>
 
                             <div className="flex space-x-3 pt-4">
                                 <button
                                     type="submit"
                                     disabled={formLoading}
-                                    className="flex-1 bg-primary text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {formLoading ? 'Saving...' : (editingProject ? 'Update' : 'Create')}
                                 </button>
@@ -240,7 +462,7 @@ export default function DashboardProjectsPage() {
                     <p className="text-gray-400 mb-4">Create your first project to get started</p>
                     <button
                         onClick={handleCreate}
-                        className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+                        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
                     >
                         Add Project
                     </button>

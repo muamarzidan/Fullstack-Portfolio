@@ -26,6 +26,12 @@ model Project {
   title       String
   description String
   image       String
+  company     String
+  role        String[]
+  techStack   String[]
+  url         String
+  statusShow  Boolean  @default(true)
+  gradient    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

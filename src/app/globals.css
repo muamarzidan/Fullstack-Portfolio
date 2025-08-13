@@ -32,6 +32,25 @@ html {
   scroll-behavior: smooth;
 }
 
+hr {
+  border-top-width: 0px;
+}
+
 .teast {
   clip-path: polygon(0% 20%, 10% 20%, 10% 0%, 90% 0%, 90% 20%, 100% 20%, 100% 100%, 0% 100%);
+}
+
+@keyframes animate-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-in {
+  animation: animate-in 0.3s ease-out;
 }

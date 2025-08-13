@@ -85,7 +85,7 @@ export default function Sidebar() {
                             )}
                         </div>
 
-                        <hr className="bg-gray-300 h-0.5 w-full rounded-full" />
+                        <hr className="bg-gray-300 h-[1px] w-full rounded-full" />
 
                         <SidebarContent 
                             navigation={navigation} 
@@ -106,7 +106,7 @@ export default function Sidebar() {
                     <GoSidebarExpand className="h-5 w-5 text-gray-800 rotate-180" />
                 </button>
 
-                <hr className="bg-gray-300 h-0.5 w-full rounded-full mt-3" />
+                <hr className="bg-gray-300 h-[1px] w-full rounded-full mt-3" />
 
                 <SidebarContent
                     navigation={navigation}
